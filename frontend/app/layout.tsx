@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
-import {Alata, Andika} from "next/font/google";
+import {Alata, Andika, Russo_One} from "next/font/google";
 import "./globals.css";
 import {ClerkProvider} from "@clerk/nextjs";
+import Sidebar from "@/components/Sidebar";
 
 const alata = Alata({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-Alata',
 });
+
+const RussoOne = Russo_One({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-Russo_One',
+})
 
 const Andika_ = Andika({
   weight: '400', // or an array like ['400', '700'] if you need more
@@ -29,10 +36,11 @@ export default function RootLayout({
       <ClerkProvider>
     <html
       lang="en"
-      className={`${alata.variable} ${Andika_.variable} h-full antialiased`}
+      className={`${alata.variable} ${RussoOne.variable} ${Andika_.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
       <div className="h-screen bg-white flex">
+        <Sidebar/>
         {children}
       </div></body>
     </html>
