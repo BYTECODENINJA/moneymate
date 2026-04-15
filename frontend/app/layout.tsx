@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import {Alata, Andika, Russo_One} from "next/font/google";
+import {Alata, Andika, Russo_One, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import {ClerkProvider} from "@clerk/nextjs";
 import Sidebar from "@/components/Sidebar";
+import { cn } from "@/lib/utils";
+
+const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
 const alata = Alata({
   weight: '400',
@@ -36,7 +39,7 @@ export default function RootLayout({
       <ClerkProvider>
     <html
       lang="en"
-      className={`${alata.variable} ${RussoOne.variable} ${Andika_.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", alata.variable, RussoOne.variable, Andika_.variable, "font-mono", jetbrainsMono.variable)}
     >
       <body className="min-h-full flex flex-col">
       <div className="h-screen bg-white flex">

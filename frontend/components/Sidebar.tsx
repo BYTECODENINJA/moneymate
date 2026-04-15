@@ -4,6 +4,7 @@ import {CircleDollarSign, LogOut} from "lucide-react";
 import {SIDEBAR_CONSTANTS} from "@/utils/constants";
 import {usePathname, useRouter} from "next/navigation";
 import {SignOutButton} from "@clerk/react";
+import {cn} from "@/lib/utils";
 
 const Sidebar = () => {
     const path = usePathname()
@@ -33,7 +34,7 @@ const Sidebar = () => {
 
                     return (
                         <div key={item.id}
-                             className={`flex items-center gap-2 p-2 ${itemSelectedClass}`}
+                             className={cn("flex items-center gap-2 p-2 px-3 rounded-md w-[95%] border-transparent",itemSelectedClass)}
                              onClick={() => handleSidebarClick(item.id)}>
                             <item.icon size={24} className="text-blue-400"/>
                             <span className="text-white font-alata text-base">{item.title}</span>
@@ -43,11 +44,12 @@ const Sidebar = () => {
             </div>
         </div>
             <SignOutButton  redirectUrl="/login">
-                <button className="flex gap-2 cursor-pointer mb-8">
+                <button className="flex gap-2 bg-blue-300 p-3 rounded-md m-3 mb-15 border-shark cursor-pointer">
                     <LogOut className="h-6 w-6 text-red-400"/>
                     <span className="text-sm text-gray-200">Logout</span>
                 </button>
             </SignOutButton>
-    </div>)
+    </div>
+)
 }
 export default Sidebar;
