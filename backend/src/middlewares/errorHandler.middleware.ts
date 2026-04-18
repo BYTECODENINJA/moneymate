@@ -1,20 +1,20 @@
-import type { ErrorRequestHandler } from "express";
+import type {ErrorRequestHandler} from "express";
+import {httpStatus} from "../config/http.config.js";
 import {AppError} from "../utils/app-error.js";
 
-export const errorHandler: ErrorRequestHandler = (err, req, res, next):any  => {
-    // req now correctly points to the Request object, which has 'path'
-    console.log("Error occurred on PATH:", req.path);
+export const errorHandler: ErrorRequestHandler = (error, req, res, next): any =>{
+    console.log("An error occured on PATH:", req.path)
 
-    if(err instanceof  AppError){
-        return res.status(err.statusCode).json({
-            message: err.message,
-            errorCode: err.errorCode,
-        });
+    if(error instanceof Error){
+        return res.status(error.statusCode).json({
+            message: error.message,
+            errorCode: error.errorCode
+        })
     }
-
-    return res.status(500).json({
-        message: "Internal Server Error",
-        // Ensure 'err' matches the first parameter name
-        message: err?.message || "Unknown error occurred",
-    });
-};
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(
+        {
+            message: "Something went wrong",
+            error: error?.message || "Unknown error",
+        }
+    )
+}

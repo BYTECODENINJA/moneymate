@@ -21,12 +21,17 @@ app.use(
 // Fixed typo: "Respond" changed to "Response"
 // Added "type" prefix to NextFunction, Request, and Response
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
-    throw new BadRequestException("Test error handling");
-
-    res.status(httpStatus.OK).json({
-        message: "BACKEND INITIALIZED"
-    });
+    try {
+        throw new BadRequestException("Test error handling");
+        res.status(httpStatus.OK).json({
+            message: "BACKEND INITIALIZED"
+        });
+    } catch (error) {
+        next(error);
+    }
 });
+
+
 
 app.use(errorHandler)
 
