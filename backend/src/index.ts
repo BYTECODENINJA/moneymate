@@ -26,7 +26,7 @@ app.use(
 // 3. Routes
 app.get(
     "/",
-    asyncHandler(async (req: Request, res: Response) => {
+    asyncHandler(async (req, res) => {
         // Note: Code after 'throw' won't execute, this is just for testing
         // throw new BadRequestException("Invalid request");
         res.status(httpStatus.OK).json({ message: "Server is up and running" });
