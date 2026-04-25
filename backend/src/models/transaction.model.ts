@@ -46,26 +46,6 @@ export interface TransactionDocument extends Document {
 }
 
 const transactionSchema = new Schema<TransactionDocument>({
-    userId: {type: Schema.Types.ObjectId, ref: "User", required: true},
-    title: {type: String, required: true},
-    type: {type: String, enum: Object.keys(TransactionTypeEnum), required: true},
-    amount: {type: Number, required: true},
-    category: {type: String, required: true},
-    receiptUrl: {type: String},
-    recuringInterval: {type: String, enum: Object.keys(RecuringIntervalEnum)},
-    nextRecuringDate: {type: Date},
-    lastProcessed: {type: Date},
-    isRecurring: {type: Boolean, default: false},
-    description: {type: String},
-    date: {type: Date, default: Date.now},
-    paymentMethod: {type: String, enum: Object.keys(paymentMethodEnum), default: paymentMethodEnum.CASH},
-    status: {type: String, enum: Object.keys(TransactionStatusnum), default: TransactionStatusnum.PENDING},
-},
-{
-    timestamps: true,
-        toJSON:{virtuals: true, getters: true},
-    toObject: {virtuals: true,  getters: true},
-});
-
-const TransactionModel = mongoose.model<TransactionDocument>("Transaction", transactionSchema);
-export default TransactionModel;
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    title: { type: String, required: true },
+    type: { type: String, enum: Object.keys(TransactionTypeEnum), required: true },
