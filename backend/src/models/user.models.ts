@@ -23,11 +23,10 @@ const userSchema = new Schema<userDocument>({
     timestamps: true,
 });
 
-userSchema.pre("save", async function (this: any, next: any) {
+userSchema.pre("save", async function (this: any) {
     if (this.isModified("password")) {
         this.password = await hashValue(this.password)
     }
-    next();
 })
 
 userSchema.methods.omitPassword =  function(): Omit<userDocument, "password">{

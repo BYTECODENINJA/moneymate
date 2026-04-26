@@ -10,6 +10,7 @@ import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { BadRequestException } from "./utils/app-error.js";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
 import connectDb from "./config/database.config.js";
+import routes from "./routes/index.js";
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use(
 );
 
 // 3. Routes
+app.use(Env.BASE_PATH, routes);
+
 app.get(
     "/",
     asyncHandler(async (req, res) => {

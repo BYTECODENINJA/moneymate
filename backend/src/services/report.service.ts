@@ -7,7 +7,7 @@ import TransactionModel, {
 import { NotFoundException } from "../utils/app-error.js";
 import { calulateNextReportDate } from "../utils/helper.js";
 import type { UpdateReportSettingType } from "../validators/report.validator.js";
-import { convertToDollarUnit } from "../utils/format-currency.js";
+import { convertToBaseUnit } from "../utils/format-currency.js";
 import { format } from "date-fns";
 import { genAI, genAIModel } from "../config/google-ai.config.js";
 import { createUserContent } from "@google/genai";
@@ -172,7 +172,7 @@ export const generateReportService = async (
     const byCategory = categories.reduce(
         (acc: any, { _id, total }: any) => {
             acc[_id] = {
-                amount: convertToDollarUnit(total),
+                amount: convertToBaseUnit(total),
                 percentage:
                     totalExpenses > 0 ? Math.round((total / totalExpenses) * 100) : 0,
             };
@@ -198,9 +198,9 @@ export const generateReportService = async (
     return {
         period: periodLabel,
         summary: {
-            income: convertToDollarUnit(totalIncome),
-            expenses: convertToDollarUnit(totalExpenses),
-            balance: convertToDollarUnit(availableBalance),
+            income: convertToBaseUnit(totalIncome),
+            expenses: convertToBaseUnit(totalExpenses),
+            balance: convertToBaseUnit(availableBalance),
             savingsRate: Number(savingsRate.toFixed(1)),
             topCategories: Object.entries(byCategory)?.map(([name, cat]: any) => ({
                 name,
@@ -229,9 +229,9 @@ async function generateInsightsAI({
 }) {
     try {
         const prompt = reportInsightPrompt({
-            totalIncome: convertToDollarUnit(totalIncome),
-            totalExpenses: convertToDollarUnit(totalExpenses),
-            availableBalance: convertToDollarUnit(availableBalance),
+            totalIncome: convertToBaseUnit(totalIncome),
+            totalExpenses: convertToBaseUnit(totalExpenses),
+            availableBalance: convertToBaseUnit(availableBalance),
             savingsRate: Number(savingsRate.toFixed(1)),
             categories,
             periodLabel,

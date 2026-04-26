@@ -23,5 +23,5 @@ const reportSettingSchema = new mongoose.Schema<ReportSettingDocument>({
     lastSentDate: {type: Date, default: null},
 },{timestamps: true});
 
-const ReportModel = mongoose.model<ReportSettingDocument>("ReportSetting", reportSettingSchema);
-export default ReportModel;
+const ReportSettingModel = mongoose.model<ReportSettingDocument>("ReportSetting", reportSettingSchema);
+export default ReportSettingModel;

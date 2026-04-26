@@ -295,8 +295,8 @@ const TransactionForm = (props: {
                         {...field}
                         disabled={isScanning}
                         onValueChange={(value) => field.onChange(value || "")}
-                        placeholder="$0.00"
-                        prefix="$"
+                        placeholder="Ksh 0.00"
+                        prefix="Ksh"
                       />
                     </div>
                   </FormControl>

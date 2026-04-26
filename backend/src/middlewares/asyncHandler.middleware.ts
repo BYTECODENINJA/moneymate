@@ -11,6 +11,11 @@ AsyncControllerType => async (req, res, next) => {
     try {
         await controller(req, res, next);
     } catch (error) {
-        next(error);
+        if (typeof next === 'function') {
+            next(error);
+        } else {
+            console.error("asyncHandler: next is missing, sending error directly", error);
+            res.status(500).json({ message: "Internal Server Error", error: error.message });
+        }
     }
 }
