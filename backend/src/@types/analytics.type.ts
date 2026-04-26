@@ -2,7 +2,7 @@ import {type userDocument} from "../models/user.models.js";
 
 declare global {
     namespace Express {
-        interface User extends userDocument {
+        interface User extends Omit<userDocument, "_id"> {
             _id?: any;
         }
     }

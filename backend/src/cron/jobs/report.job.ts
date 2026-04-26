@@ -1,11 +1,11 @@
 import { endOfMonth, format, startOfMonth, subMonths } from "date-fns";
-import ReportSettingModel from "../../models/report-setting.model";
-import { UserDocument } from "../../models/user.model";
+import ReportSettingModel from "../../models/report-setting.model.js";
+import { type userDocument } from "../../models/user.models.js";
 import mongoose from "mongoose";
-import { generateReportService } from "../../services/report.service";
-import ReportModel, { ReportStatusEnum } from "../../models/report.model";
-import { calulateNextReportDate } from "../../utils/helper";
-import { sendReportEmail } from "../../mailers/report.mailer";
+import { generateReportService } from "../../services/report.service.js";
+import ReportModel, { ReportStatusEnum } from "../../models/report.model.js";
+import { calulateNextReportDate } from "../../utils/helper.js";
+import { sendReportEmail } from "../../mailers/report.mailer.js";
 
 export const processReportJob = async () => {
     const now = new Date();
@@ -26,13 +26,13 @@ export const processReportJob = async () => {
             isEnabled: true,
             nextReportDate: { $lte: now },
         })
-            .populate<{ userId: UserDocument }>("userId")
+            .populate<{ userId: userDocument }>("userId")
             .cursor();
 
         console.log("Running report ");
 
         for await (const setting of reportSettingCursor) {
-            const user = setting.userId as UserDocument;
+            const user = setting.userId as userDocument;
             if (!user) {
                 console.log(`User not found for setting: ${setting._id}`);
                 continue;
@@ -41,7 +41,7 @@ export const processReportJob = async () => {
             const session = await mongoose.startSession();
 
             try {
-                const report = await generateReportService(user.id, from, to);
+                const report = await generateReportService(user._id.toString(), from, to);
 
                 console.log(report, "resport data");
 
@@ -64,7 +64,7 @@ export const processReportJob = async () => {
                         });
                         emailSent = true;
                     } catch (error) {
-                        console.log(`Email failed for ${user.id}`);
+                        console.log(`Email failed for ${user._id}`);
                     }
                 }
 
@@ -77,7 +77,7 @@ export const processReportJob = async () => {
                             bulkReports.push({
                                 insertOne: {
                                     document: {
-                                        userId: user.id,
+                                        userId: user._id,
                                         sentDate: now,
                                         period: report.period,
                                         status: ReportStatusEnum.SENT,
@@ -103,7 +103,7 @@ export const processReportJob = async () => {
                             bulkReports.push({
                                 insertOne: {
                                     document: {
-                                        userId: user.id,
+                                        userId: user._id,
                                         sentDate: now,
                                         period:
                                             report?.period ||

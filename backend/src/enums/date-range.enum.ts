@@ -1,32 +1,12 @@
-import cron from "node-cron";
-import { processRecurringTransactions } from "./jobs/transaction.job";
-import { processReportJob } from "./jobs/report.job";
+export enum DateRangeEnum {
+    LAST_30_DAYS = "30days",
+    LAST_MONTH = "lastMonth",
+    LAST_3_MONTHS = "last3Months",
+    LAST_YEAR = "lastYear",
+    THIS_MONTH = "thisMonth",
+    THIS_YEAR = "thisYear",
+    ALL_TIME = "allTime",
+    CUSTOM = "custom",
+}
 
-const scheduleJob = (name: string, time: string, job: Function) => {
-    console.log(`Scheduling ${name} at ${time}`);
-
-    return cron.schedule(
-        time,
-        async () => {
-            try {
-                await job();
-                console.log(`${name} completed`);
-            } catch (error) {
-                console.log(`${name} failed`, error);
-            }
-        },
-        {
-            scheduled: true,
-            timezone: "UTC",
-        }
-    );
-};
-
-export const startJobs = () => {
-    return [
-        scheduleJob("Transactions", "5 0 * * *", processRecurringTransactions),
-
-        //run 2:30am every first of the month
-        scheduleJob("Reports", "30 2 1 * *", processReportJob),
-    ];
-};
+export type DateRangePreset = `${DateRangeEnum}`;

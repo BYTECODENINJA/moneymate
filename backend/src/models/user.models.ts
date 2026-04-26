@@ -1,4 +1,4 @@
-import {Document, Schema} from "mongoose";
+import mongoose, {Document, Schema} from "mongoose";
 import {compareValue, hashValue} from "../utils/bcrypt.js";
 
 export interface userDocument extends Document{
@@ -23,11 +23,9 @@ const userSchema = new Schema<userDocument>({
     timestamps: true,
 });
 
-userSchema.pre("save", async function(next){
-    if (this.isModified("password")){
-        if (!this.password){
-        this.password =await hashValue(this.password)
-            }
+userSchema.pre("save", async function (this: any, next: any) {
+    if (this.isModified("password")) {
+        this.password = await hashValue(this.password)
     }
     next();
 })

@@ -1,7 +1,7 @@
-import { formatCurrency } from "../utils/format-currency";
-import { getReportEmailTemplate } from "./templates/report.template";
-import { sendEmail } from "./mailer";
-import { ReportType } from "../@types/report.type";
+import { formatCurrency } from "../utils/format-currency.js";
+import { getReportEmailTemplate } from "./templates/report.template.js";
+import { sendEmail } from "./mailer.js";
+import type { ReportType } from "../@types/report.type.js";
 
 type ReportEmailParams = {
     email: string;

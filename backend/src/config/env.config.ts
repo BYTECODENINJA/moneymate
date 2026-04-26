@@ -14,6 +14,11 @@ const envConfig = () => ({
     GEMINI_API_KEY: getEnv('GEMINI_API_KEY'),
 
     FRONTEND_ORIGIN: getEnv('FRONTEND_ORIGIN', 'http://localhost:5173'),
+    RESEND_MAILER_SENDER: getEnv("RESEND_MAILER_SENDER", "hello@example.com"),
+    RESEND_API_KEY: getEnv("RESEND_API_KEY"),
+    CLOUDINARY_CLOUD_NAME: getEnv("CLOUDINARY_CLOUD_NAME"),
+    CLOUDINARY_API_KEY: getEnv("CLOUDINARY_API_KEY"),
+    CLOUDINARY_API_SECRET: getEnv("CLOUDINARY_API_SECRET"),
 })
 
 export const Env  = envConfig();

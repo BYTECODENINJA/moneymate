@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { asyncHandler } from "../middlewares/asyncHandler.middlerware";
-import { HTTPSTATUS } from "../config/http.config";
-import { DateRangePreset } from "../enums/date-range.enum";
+import { type Request, type Response } from "express";
+import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
+import { httpStatus } from "../config/http.config.js";
+import { type DateRangePreset } from "../enums/date-range.enum.js";
 import {
     chartAnalyticsService,
     expensePieChartBreakdownService,
     summaryAnalyticsService,
-} from "../services/analytics.service";
+} from "../services/analytics.service.js";
 
 export const summaryAnalyticsController = asyncHandler(
     async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export const summaryAnalyticsController = asyncHandler(
             filter.customTo
         );
 
-        return res.status(HTTPSTATUS.OK).json({
+        return res.status(httpStatus.OK).json({
             message: "Summary fetched successfully",
             data: stats,
         });
@@ -51,7 +51,7 @@ export const chartAnalyticsController = asyncHandler(
             filter.customTo
         );
 
-        return res.status(HTTPSTATUS.OK).json({
+        return res.status(httpStatus.OK).json({
             message: "Chart fetched successfully",
             data: chartData,
         });
@@ -75,7 +75,7 @@ export const expensePieChartBreakdownController = asyncHandler(
             filter.customTo
         );
 
-        return res.status(HTTPSTATUS.OK).json({
+        return res.status(httpStatus.OK).json({
             message: "Expense breakdown fetched successfully",
             data: pieChartData,
         });

@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { asyncHandler } from "../middlewares/asyncHandler.middlerware";
-import { HTTPSTATUS } from "../config/http.config";
+import { type Request, type Response } from "express";
+import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
+import { httpStatus } from "../config/http.config.js";
 import {
     generateReportService,
     getAllReportsService,
     updateReportSettingService,
-} from "../services/report.service";
-import { updateReportSettingSchema } from "../validators/report.validator";
+} from "../services/report.service.js";
+import { updateReportSettingSchema } from "../validators/report.validator.js";
 
 export const getAllReportsController = asyncHandler(
     async (req: Request, res: Response) => {
@@ -19,7 +19,7 @@ export const getAllReportsController = asyncHandler(
 
         const result = await getAllReportsService(userId, pagination);
 
-        return res.status(HTTPSTATUS.OK).json({
+        return res.status(httpStatus.OK).json({
             message: "Reports history fetched successfully",
             ...result,
         });
@@ -33,7 +33,7 @@ export const updateReportSettingController = asyncHandler(
 
         await updateReportSettingService(userId, body);
 
-        return res.status(HTTPSTATUS.OK).json({
+        return res.status(httpStatus.OK).json({
             message: "Reports setting updated successfully",
         });
     }
@@ -48,7 +48,7 @@ export const generateReportController = asyncHandler(
 
         const result = await generateReportService(userId, fromDate, toDate);
 
-        return res.status(HTTPSTATUS.OK).json({
+        return res.status(httpStatus.OK).json({
             message: "Report generated successfully",
             ...result,
         });

@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import {httpStatus} from "../config/http.config.ts";
+import { type Request, type Response } from "express";
+import {httpStatus} from "../config/http.config.js";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware.js"
 import { loginSchema, registerSchema } from "../validators/auth.validator.js";
-import { loginService, registerService } from "../services/auth.service";
+import { loginService, registerService } from "../services/auth.service.js";
 
 export const registerController = asyncHandler(
     async (req: Request, res: Response) => {

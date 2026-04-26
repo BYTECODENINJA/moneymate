@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import TransactionModel from "../../models/transaction.model";
-import { calculateNextOccurrence } from "../../utils/helper";
+import TransactionModel from "../../models/transaction.model.js";
+import { calculateNextOccurrence } from "../../utils/helper.js";
 
 export const processRecurringTransactions = async () => {
     const now = new Date();
@@ -26,23 +26,19 @@ export const processRecurringTransactions = async () => {
                 await session.withTransaction(
                     async () => {
                         // console.log(tx, "transaction");
-                        await TransactionModel.create(
-                            [
-                                {
-                                    ...tx.toObject(),
-                                    _id: new mongoose.Types.ObjectId(),
-                                    title: `Recurring - ${tx.title}`,
-                                    date: tx.nextRecurringDate,
-                                    isRecurring: false,
-                                    nextRecurringDate: null,
-                                    recurringInterval: null,
-                                    lastProcessed: null,
-                                    createdAt: undefined,
-                                    updatedAt: undefined,
-                                },
-                            ],
-                            { session }
-                        );
+                        const newTxData: any = {
+                            ...tx.toObject(),
+                            _id: new mongoose.Types.ObjectId(),
+                            title: `Recurring - ${tx.title}`,
+                            date: tx.nextRecurringDate,
+                            isRecurring: false,
+                            nextRecurringDate: undefined,
+                            recurringInterval: undefined,
+                            lastProcessed: undefined,
+                            createdAt: undefined,
+                            updatedAt: undefined,
+                        };
+                        await TransactionModel.create([newTxData], { session });
 
                         await TransactionModel.updateOne(
                             { _id: tx._id },
