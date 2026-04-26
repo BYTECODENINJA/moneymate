@@ -48,6 +48,8 @@ const DashboardDataChart: React.FC<PropsType> = (props) => {
 
   const { data, isFetching } = useChartAnalyticsQuery({
     preset: dateRange?.value,
+    from: dateRange?.from?.toISOString(),
+    to: dateRange?.to?.toISOString(),
   });
   const chartData = data?.data?.chartData || [];
   const totalExpenseCount = data?.data?.totalExpenseCount || 0;

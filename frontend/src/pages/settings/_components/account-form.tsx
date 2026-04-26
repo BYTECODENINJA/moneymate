@@ -27,7 +27,7 @@ const accountFormSchema = z.object({
       message: "Name must be at least 2 characters.",
     })
     .optional(),
-  profilePicture: z.string(),
+  profilePicture: z.string().optional(),
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;

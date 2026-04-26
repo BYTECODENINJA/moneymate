@@ -4,7 +4,11 @@ import { DateRangeType } from "@/components/date-range-select";
 
 const DashboardStats = ({ dateRange }: { dateRange?: DateRangeType }) => {
   const { data, isFetching } = useSummaryAnalyticsQuery(
-    { preset: dateRange?.value },
+    {
+      preset: dateRange?.value,
+      from: dateRange?.from?.toISOString(),
+      to: dateRange?.to?.toISOString(),
+    },
     { skip: !dateRange }
   );
   const summaryData = data?.data;
