@@ -5,7 +5,6 @@ import TransactionModel, {
 } from "../models/transaction.model.js";
 import { getDateRange } from "../utils/date.js";
 import { differenceInDays, subDays, subYears } from "date-fns";
-import { convertToBaseUnit } from "../utils/format-currency.js";
 
 export const summaryAnalyticsService = async (
     userId: string,
@@ -71,7 +70,6 @@ export const summaryAnalyticsService = async (
                             expenses: { $ifNull: ["$totalExpenses", 0] },
                         },
                         in: {
-                            // ((income - expenses) / income) * 100;
                             savingsPercentage: {
                                 $cond: [
                                     { $lte: ["$$income", 0] },
@@ -90,7 +88,6 @@ export const summaryAnalyticsService = async (
                                 ],
                             },
 
-                            //Expense Ratio = (expenses / income) * 100
                             expenseRatio: {
                                 $cond: [
                                     { $lte: ["$$income", 0] },
@@ -141,8 +138,6 @@ export const summaryAnalyticsService = async (
     };
 
     if (from && to && rangeValue !== DateRangeEnum.ALL_TIME) {
-        //last 30 days  previous las 30 days,
-
         const period = differenceInDays(to, from) + 1;
         console.log(`${differenceInDays(to, from)}`, period, "period");
 
@@ -152,7 +147,6 @@ export const summaryAnalyticsService = async (
         ].includes(rangeValue);
 
         const prevPeriodFrom = isYearly ? subYears(from, 1) : subDays(from, period);
-
         const prevPeriodTo = isYearly ? subYears(to, 1) : subDays(to, period);
         console.log(prevPeriodFrom, prevPeriodTo, "Prev date");
 
@@ -219,9 +213,11 @@ export const summaryAnalyticsService = async (
     }
 
     return {
-        availableBalance: convertToBaseUnit(availableBalance),
-        totalIncome: convertToBaseUnit(totalIncome),
-        totalExpenses: convertToBaseUnit(totalExpenses),
+        // Fixed: removed convertToBaseUnit() — amounts are stored as plain numbers,
+        // not in smallest unit (cents). Dividing by 100 was causing e.g. 45000 → 450.
+        availableBalance,
+        totalIncome,
+        totalExpenses,
         savingRate: {
             percentage: parseFloat(savingData.savingsPercentage.toFixed(2)),
             expenseRatio: parseFloat(savingData.expenseRatio.toFixed(2)),
@@ -230,15 +226,9 @@ export const summaryAnalyticsService = async (
         percentageChange: {
             ...percentageChange,
             previousValues: {
-                incomeAmount: convertToBaseUnit(
-                    percentageChange.previousValues.incomeAmount
-                ),
-                expenseAmount: convertToBaseUnit(
-                    percentageChange.previousValues.expenseAmount
-                ),
-                balanceAmount: convertToBaseUnit(
-                    percentageChange.previousValues.balanceAmount
-                ),
+                incomeAmount: percentageChange.previousValues.incomeAmount,
+                expenseAmount: percentageChange.previousValues.expenseAmount,
+                balanceAmount: percentageChange.previousValues.balanceAmount,
             },
         },
         preset: {
@@ -271,7 +261,6 @@ export const chartAnalyticsService = async (
 
     const result = await TransactionModel.aggregate([
         { $match: filter },
-        //Group the transaction by date (YYYY-MM-DD)
         {
             $group: {
                 _id: {
@@ -349,10 +338,11 @@ export const chartAnalyticsService = async (
 
     const resultData = result[0] || {};
 
+    // Fixed: removed convertToBaseUnit() — amounts are stored as plain numbers
     const transaformedData = (resultData?.chartData || []).map((item: any) => ({
         date: item.date,
-        income: convertToBaseUnit(item.income),
-        expenses: convertToBaseUnit(item.expenses),
+        income: item.income,
+        expenses: item.expenses,
     }));
 
     return {
@@ -398,7 +388,7 @@ export const expensePieChartBreakdownService = async (
                 value: { $sum: { $abs: "$amount" } },
             },
         },
-        { $sort: { value: -1 } }, //
+        { $sort: { value: -1 } },
 
         {
             $facet: {
@@ -438,7 +428,6 @@ export const expensePieChartBreakdownService = async (
                 _id: 0,
                 totalSpent: 1,
                 breakdown: {
-                    // .map((cat: any)=> )
                     $map: {
                         input: "$breakdown",
                         as: "cat",
@@ -475,11 +464,13 @@ export const expensePieChartBreakdownService = async (
         totalSpent: 0,
         breakdown: [],
     };
+
+    // Fixed: removed convertToBaseUnit() — amounts are stored as plain numbers
     const transformedData = {
-        totalSpent: convertToBaseUnit(data.totalSpent),
+        totalSpent: data.totalSpent,
         breakdown: data.breakdown.map((item: any) => ({
             ...item,
-            value: convertToBaseUnit(item.value),
+            value: item.value,
         })),
     };
 

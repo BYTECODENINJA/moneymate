@@ -4,6 +4,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 import express, { type NextFunction, type Request, type Response } from "express";
 import cors from "cors";
+import passport from "passport";
 import { Env } from "./config/env.config.js";
 import { httpStatus } from "./config/http.config.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
@@ -11,6 +12,7 @@ import { BadRequestException } from "./utils/app-error.js";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
 import connectDb from "./config/database.config.js";
 import routes from "./routes/index.js";
+import "./config/passport.config.js"; // Initialize passport strategy
 
 const app = express();
 
@@ -23,23 +25,22 @@ app.use(
         credentials: true,
     })
 );
+app.use(passport.initialize()); // 3. Initialize passport BEFORE routes
 
-// 3. Routes
+// 4. Routes
 app.use(Env.BASE_PATH, routes);
 
 app.get(
     "/",
     asyncHandler(async (req, res) => {
-        // Note: Code after 'throw' won't execute, this is just for testing
-        // throw new BadRequestException("Invalid request");
         res.status(httpStatus.OK).json({ message: "Server is up and running" });
     })
 );
 
-// 4. Error Handler MUST be the last middleware
+// 5. Error Handler MUST be the last middleware
 app.use(errorHandler);
 
-// 5. Connect to DB THEN start the server
+// 6. Connect to DB THEN start the server
 const startServer = async () => {
     try {
         await connectDb();

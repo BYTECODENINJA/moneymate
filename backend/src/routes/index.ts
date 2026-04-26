@@ -4,13 +4,17 @@ import transactionRoutes from "./transaction.route.js";
 import analyticsRoutes from "./analytics.route.js";
 import reportRoutes from "./report.route.js";
 import userRoutes from "./user.route.js";
+import { passportAuthenticateJwt } from "../config/passport.config.js";
 
 const routes = Router();
 
+// Public routes (no auth required)
 routes.use("/auth", authRoutes);
-routes.use("/transactions", transactionRoutes);
-routes.use("/analytics", analyticsRoutes);
-routes.use("/reports", reportRoutes);
-routes.use("/user", userRoutes);
+
+// Protected routes (JWT required)
+routes.use("/transactions", passportAuthenticateJwt, transactionRoutes);
+routes.use("/analytics", passportAuthenticateJwt, analyticsRoutes);
+routes.use("/reports", passportAuthenticateJwt, reportRoutes);
+routes.use("/user", passportAuthenticateJwt, userRoutes);
 
 export default routes;

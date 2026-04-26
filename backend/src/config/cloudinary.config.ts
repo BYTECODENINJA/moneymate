@@ -12,7 +12,7 @@ cloudinary.config({
 const STORAGE_PARAMS = {
     folder: "images",
     allowed_formats: ["jpg", "png", "jpeg"],
-    rescource_type: "image" as const,
+    resource_type: "image" as const,  // Fixed: was "rescource_type" (typo)
     quality: "auto:good" as const,
 };
 
@@ -29,9 +29,9 @@ export const upload = multer({
     fileFilter: (_, file, cb) => {
         const isValid = /^image\/(jpe?g|png)$/.test(file.mimetype);
         if (!isValid) {
-            return;
+            // Fixed: was "return" which left multer hanging; must call cb
+            return cb(new Error("Only JPEG and PNG images are allowed"));
         }
-
         cb(null, true);
     },
 });
