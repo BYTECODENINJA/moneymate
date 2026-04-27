@@ -4,7 +4,6 @@ import ReportModel from "../models/report.model.js";
 import TransactionModel, { TransactionTypeEnum, } from "../models/transaction.model.js";
 import { NotFoundException } from "../utils/app-error.js";
 import { calulateNextReportDate } from "../utils/helper.js";
-import { convertToDollarUnit } from "../utils/format-currency.js";
 import { format } from "date-fns";
 import { genAI, genAIModel } from "../config/google-ai.config.js";
 import { createUserContent } from "@google/genai";
@@ -37,8 +36,6 @@ export const updateReportSettingService = async (userId, body) => {
     });
     if (!existingReportSetting)
         throw new NotFoundException("Report setting not found");
-    //   const frequency =
-    //     existingReportSetting.frequency || ReportFrequencyEnum.MONTHLY;
     if (isEnabled) {
         const currentNextReportDate = existingReportSetting.nextReportDate;
         const now = new Date();
@@ -127,9 +124,10 @@ export const generateReportService = async (userId, fromDate, toDate) => {
         return null;
     const { totalIncome = 0, totalExpenses = 0, categories = [], } = results[0] || {};
     console.log(results[0], "results");
+    // Fixed: removed convertToBaseUnit() — amounts are plain numbers, not cents
     const byCategory = categories.reduce((acc, { _id, total }) => {
         acc[_id] = {
-            amount: convertToDollarUnit(total),
+            amount: total,
             percentage: totalExpenses > 0 ? Math.round((total / totalExpenses) * 100) : 0,
         };
         return acc;
@@ -148,9 +146,10 @@ export const generateReportService = async (userId, fromDate, toDate) => {
     return {
         period: periodLabel,
         summary: {
-            income: convertToDollarUnit(totalIncome),
-            expenses: convertToDollarUnit(totalExpenses),
-            balance: convertToDollarUnit(availableBalance),
+            // Fixed: removed convertToBaseUnit() on all monetary values
+            income: totalIncome,
+            expenses: totalExpenses,
+            balance: availableBalance,
             savingsRate: Number(savingsRate.toFixed(1)),
             topCategories: Object.entries(byCategory)?.map(([name, cat]) => ({
                 name,
@@ -163,10 +162,11 @@ export const generateReportService = async (userId, fromDate, toDate) => {
 };
 async function generateInsightsAI({ totalIncome, totalExpenses, availableBalance, savingsRate, categories, periodLabel, }) {
     try {
+        // Fixed: removed convertToBaseUnit() — pass actual amounts to AI prompt
         const prompt = reportInsightPrompt({
-            totalIncome: convertToDollarUnit(totalIncome),
-            totalExpenses: convertToDollarUnit(totalExpenses),
-            availableBalance: convertToDollarUnit(availableBalance),
+            totalIncome,
+            totalExpenses,
+            availableBalance,
             savingsRate: Number(savingsRate.toFixed(1)),
             categories,
             periodLabel,

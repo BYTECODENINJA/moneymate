@@ -23,8 +23,8 @@ export declare const updateReportSettingService: (userId: string, body: UpdateRe
 export declare const generateReportService: (userId: string, fromDate: Date, toDate: Date) => Promise<{
     period: string;
     summary: {
-        income: number;
-        expenses: number;
+        income: any;
+        expenses: any;
         balance: number;
         savingsRate: number;
         topCategories: {

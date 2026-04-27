@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import type { LoginSchemaType, RegisterSchemaType } from "../validators/auth.validator.js";
-export declare const registerService: (body: RegisterSchemaType) => Promise<void>;
+export declare const registerService: (body: RegisterSchemaType) => Promise<{
+    user: Omit<import("../models/user.models.js").userDocument, "password">;
+}>;
 export declare const loginService: (body: LoginSchemaType) => Promise<{
     user: Omit<import("../models/user.models.js").userDocument, "password">;
     accessToken: string;

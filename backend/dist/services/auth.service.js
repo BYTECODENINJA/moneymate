@@ -8,7 +8,7 @@ export const registerService = async (body) => {
     const { email } = body;
     const session = await mongoose.startSession();
     try {
-        await session.withTransaction(async () => {
+        return await session.withTransaction(async () => {
             const existingUser = await UserModel.findOne({ email }).session(session);
             if (existingUser)
                 throw new UnauthorizedException("User already exists");

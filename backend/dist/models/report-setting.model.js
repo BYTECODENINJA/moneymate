@@ -10,6 +10,6 @@ const reportSettingSchema = new mongoose.Schema({
     nextReportDate: { type: Date, default: Date.now },
     lastSentDate: { type: Date, default: null },
 }, { timestamps: true });
-const ReportModel = mongoose.model("ReportSetting", reportSettingSchema);
-export default ReportModel;
+const ReportSettingModel = mongoose.model("ReportSetting", reportSettingSchema);
+export default ReportSettingModel;
 //# sourceMappingURL=report-setting.model.js.map

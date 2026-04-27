@@ -231,6 +231,7 @@ export const scanReceiptService = async (file) => {
         };
     }
     catch (error) {
+        console.error("Scanning receipt error:", error);
         return { error: "Reciept scanning  service unavailable" };
     }
 };

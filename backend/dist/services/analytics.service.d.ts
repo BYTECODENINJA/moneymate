@@ -1,8 +1,8 @@
 import { DateRangeEnum, type DateRangePreset } from "../enums/date-range.enum.js";
 export declare const summaryAnalyticsService: (userId: string, dateRangePreset?: DateRangePreset, customFrom?: Date, customTo?: Date) => Promise<{
-    availableBalance: number;
-    totalIncome: number;
-    totalExpenses: number;
+    availableBalance: any;
+    totalIncome: any;
+    totalExpenses: any;
     savingRate: {
         percentage: number;
         expenseRatio: number;
@@ -64,7 +64,7 @@ export declare const expensePieChartBreakdownService: (userId: string, dateRange
         from: undefined;
         to: undefined;
     };
-    totalSpent: number;
+    totalSpent: any;
     breakdown: any;
 }>;
 //# sourceMappingURL=analytics.service.d.ts.map
