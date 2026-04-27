@@ -1,3 +1,4 @@
+import "dotenv/config";
 export declare const Env: {
     NODE_ENV: string;
     PORT: string;

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {getEnv} from "../utils/get-env.js";
 
 const envConfig = () => ({

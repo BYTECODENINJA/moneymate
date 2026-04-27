@@ -12,7 +12,7 @@ export const errorHandler = (error, req, res, next) => {
     }
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         message: "Something went wrong",
-        error: error?.message || "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown error",
     });
 };
 //# sourceMappingURL=errorHandler.middleware.js.map

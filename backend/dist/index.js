@@ -1,3 +1,4 @@
+import "dotenv/config";
 import dns from "node:dns";
 // 1. DNS Fix: Force Google DNS to resolve MongoDB SRV records
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
