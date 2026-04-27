@@ -1,23 +1,24 @@
 import "dotenv/config";
 import dns from "node:dns";
-// 1. DNS Fix: Force Google DNS to resolve MongoDB SRV records
+
+// DNS Fix: Force Google DNS to resolve MongoDB SRV records
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-import express, { type NextFunction, type Request, type Response } from "express";
+import express from "express";
 import cors from "cors";
 import passport from "passport";
 import { Env } from "./config/env.config.js";
 import { httpStatus } from "./config/http.config.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
-import { BadRequestException } from "./utils/app-error.js";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware.js";
 import connectDb from "./config/database.config.js";
 import routes from "./routes/index.js";
-import "./config/passport.config.js"; // Initialize passport strategy
+import "./config/passport.config.js";
+import { initializeCrons } from "./cron/index.js";
 
 const app = express();
 
-// 2. Standard Middleware
+// Standard Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -26,9 +27,9 @@ app.use(
         credentials: true,
     })
 );
-app.use(passport.initialize()); // 3. Initialize passport BEFORE routes
+app.use(passport.initialize());
 
-// 4. Routes
+// Routes
 app.use(Env.BASE_PATH, routes);
 
 app.get(
@@ -38,15 +39,16 @@ app.get(
     })
 );
 
-// 5. Error Handler MUST be the last middleware
+// Error Handler MUST be the last middleware
 app.use(errorHandler);
 
-// 6. Connect to DB THEN start the server
+// Connect to DB THEN start the server
 const startServer = async () => {
     try {
         await connectDb();
+        initializeCrons();
         app.listen(Env.PORT, () => {
-            console.log(`Server is running on port: ${Env.PORT}`);
+            console.log(`Server is running on port: ${Env.PORT} in ${Env.NODE_ENV} mode`);
         });
     } catch (error) {
         console.error("Failed to start server:", error);
