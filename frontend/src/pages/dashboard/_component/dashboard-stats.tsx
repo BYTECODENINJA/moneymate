@@ -15,7 +15,7 @@ const DashboardStats = ({ dateRange }: { dateRange?: DateRangeType }) => {
 
   return (
     <div className="flex flex-row items-center">
-      <div className="flex-1 lg:flex-[1] grid grid-cols-1 lg:grid-cols-4 gap-4">
+      <div className="flex-1 lg:flex-[1] grid grid-cols-1 lg:grid-cols-4 gap-2">
         <SummaryCard
           title="Available Balance"
           value={summaryData?.availableBalance}
