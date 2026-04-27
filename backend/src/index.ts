@@ -18,12 +18,23 @@ import { initializeCrons } from "./cron/index.js";
 
 const app = express();
 
+// Normalise the origin — strip any accidental trailing slash
+const allowedOrigin = Env.FRONTEND_ORIGIN.replace(/\/$/, "");
+
 // Standard Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
-        origin: Env.FRONTEND_ORIGIN,
+        origin: (origin, callback) => {
+            // Allow requests with no origin (e.g. mobile apps, curl, Postman)
+            if (!origin) return callback(null, true);
+            // Strip trailing slash from the incoming origin before comparing
+            if (origin.replace(/\/$/, "") === allowedOrigin) {
+                return callback(null, true);
+            }
+            callback(new Error(`CORS: Origin "${origin}" is not allowed`));
+        },
         credentials: true,
     })
 );
