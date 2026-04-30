@@ -7,7 +7,7 @@ export const formatCurrency = (value: number,
     isExpense?: boolean;
   } = {}
 ):string => {
-  const { currency = 'KES', decimalPlaces = 2, compact = false, showSign = false, isExpense = false } = options;
+  const { currency = 'KES', decimalPlaces = 0, compact = false, showSign = false, isExpense = false } = options;
 
   const displayValue = isExpense ? -Math.abs(value) : value;
   
